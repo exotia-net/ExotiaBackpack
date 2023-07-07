@@ -1,0 +1,11 @@
+net\exotia\plugins\exotiabackpack\backpack\BackpackService.class
+net\exotia\plugins\exotiabackpack\configuration\ConfigWithResource.class
+net\exotia\plugins\exotiabackpack\backpack\Backpack.class
+net\exotia\plugins\exotiabackpack\ExotiaBackpack.class
+net\exotia\plugins\exotiabackpack\configuration\providers\sections\DatabaseSection.class
+net\exotia\plugins\exotiabackpack\database\providers\MySQLProvider.class
+net\exotia\plugins\exotiabackpack\utils\ItemStackSerializer.class
+net\exotia\plugins\exotiabackpack\configuration\ConfigurationManager.class
+net\exotia\plugins\exotiabackpack\configuration\providers\PluginConfig.class
+net\exotia\plugins\exotiabackpack\database\DatabaseService.class
+net\exotia\plugins\exotiabackpack\configuration\AbstractConfigWithResource.class

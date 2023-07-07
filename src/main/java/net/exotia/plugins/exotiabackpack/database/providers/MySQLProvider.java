@@ -7,11 +7,9 @@ import net.exotia.plugins.exotiabackpack.configuration.providers.PluginConfig;
 import net.exotia.plugins.exotiabackpack.configuration.providers.sections.DatabaseSection;
 import net.exotia.plugins.exotiabackpack.database.DatabaseService;
 import com.zaxxer.hikari.HikariDataSource;
+import net.exotia.plugins.exotiabackpack.utils.ItemStackSerializer;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MySQLProvider implements DatabaseService {
     private final DatabaseSection database;
@@ -32,7 +30,9 @@ public class MySQLProvider implements DatabaseService {
         try {
             Statement statement = this.getConnection().createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM `exotia_backpacks`;");
-            Backpack backpack = new Backpack(resultSet, this.pluginConfig);
+            while (resultSet.next()) {
+                this.backpackService.registerBackpack(new Backpack(resultSet, this.pluginConfig));
+            }
         } catch (SQLException exception) {
             exception.printStackTrace();
         }
@@ -40,12 +40,28 @@ public class MySQLProvider implements DatabaseService {
 
     @Override
     public void save(Backpack backpack) {
-
+        try {
+            PreparedStatement preparedStatement = this.getConnection()
+                    .prepareStatement("INSERT INTO `exotia_backpacks` (`owner`, `items`) VALUES (?, ?) ON DUPLICATE KEY UPDATE `items` = VALUES(items);");
+            preparedStatement.setString(1, backpack.getUniqueId().toString());
+            preparedStatement.setString(2, ItemStackSerializer.toBase64(backpack.getInventory().getContents()));
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
     public void delete(Backpack backpack) {
-
+        try {
+            PreparedStatement preparedStatement = this.getConnection().prepareStatement("DELETE FROM `exotia_backpacks` WHERE `owner` = ?;");
+            preparedStatement.setString(1, backpack.getUniqueId().toString());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
@@ -53,7 +69,7 @@ public class MySQLProvider implements DatabaseService {
         this.hikariDataSource = new HikariDataSource(this.getHikariConfig());
         try {
             Statement statement = this.hikariDataSource.getConnection().createStatement();
-            String query = "create table if not exists `exotia_backpacks`(`owner` varchar(64) not null,`items` text not null, primary key (owner));";
+            String query = "CREATE TABLE IF NOT EXISTS `exotia_backpacks`(`owner` VARCHAR(64) NOT NULL,`items` TEXT NOT NULL, PRIMARY KEY (owner));";
             statement.executeUpdate(query);
             statement.close();
         } catch (SQLException exception) {
