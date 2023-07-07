@@ -1,0 +1,4 @@
+name: ExotiaBackpack
+version: '1.0-SNAPSHOT'
+main: net.exotia.plugins.exotiabackpack.ExotiaBackpack
+api-version: '1.19'
