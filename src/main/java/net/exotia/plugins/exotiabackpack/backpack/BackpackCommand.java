@@ -1,6 +1,7 @@
 package net.exotia.plugins.exotiabackpack.backpack;
 
 import dev.rollczi.litecommands.command.execute.Execute;
+import dev.rollczi.litecommands.command.permission.Permission;
 import dev.rollczi.litecommands.command.route.Route;
 import net.exotia.plugins.exotiabackpack.configuration.providers.PluginConfig;
 import org.bukkit.entity.Player;
@@ -21,6 +22,10 @@ public class BackpackCommand {
         if (backpack == null) {
             this.backpackService.createUser(player, this.pluginConfig);
         }
-        backpack.openInventory();
+        backpack.openInventory(this.pluginConfig);
     }
+
+//    @Execute(route = "upgrade")
+//    @Permission("exotia.backpacks.admin")
+//    public void upgrade(P)
 }
