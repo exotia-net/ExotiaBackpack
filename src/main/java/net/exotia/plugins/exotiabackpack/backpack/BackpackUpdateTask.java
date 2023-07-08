@@ -13,6 +13,9 @@ public class BackpackUpdateTask implements Runnable {
 
     @Override
     public void run() {
-        this.backpackService.findBackpacks(true).forEach(this.databaseService::save);
+        this.backpackService.findBackpacks(true).forEach(backpack -> {
+            backpack.setNeedUpdate(false);
+            this.databaseService.save(backpack);
+        });
     }
 }

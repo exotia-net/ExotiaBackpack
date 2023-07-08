@@ -46,7 +46,6 @@ public class MySQLProvider implements DatabaseService {
             preparedStatement.setString(1, backpack.getUniqueId().toString());
             preparedStatement.setString(2, ItemStackSerializer.toBase64(backpack.getInventory().getContents()));
             preparedStatement.executeUpdate();
-            preparedStatement.close();
         } catch (SQLException exception) {
             exception.printStackTrace();
         }

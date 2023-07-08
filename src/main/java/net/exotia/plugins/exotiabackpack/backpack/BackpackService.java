@@ -11,6 +11,9 @@ public class BackpackService {
     public void registerBackpack(Backpack backpack) {
         this.backpacks.add(backpack);
     }
+    public void createUser(Player player) {
+        this.registerBackpack(new Backpack(player));
+    }
 
     public Backpack findBackpack(Player player) {
         return this.backpacks.stream().filter(backpack -> backpack.getUniqueId().equals(player.getUniqueId())).findFirst().orElse(null);
