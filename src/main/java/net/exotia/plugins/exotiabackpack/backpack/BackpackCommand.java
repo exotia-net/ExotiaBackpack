@@ -24,8 +24,4 @@ public class BackpackCommand {
         }
         backpack.openInventory(this.pluginConfig);
     }
-
-//    @Execute(route = "upgrade")
-//    @Permission("exotia.backpacks.admin")
-//    public void upgrade(P)
 }

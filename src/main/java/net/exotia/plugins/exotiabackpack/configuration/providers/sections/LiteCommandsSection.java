@@ -4,12 +4,12 @@ import net.dzikoysk.cdn.entity.Contextual;
 
 @Contextual
 public class LiteCommandsSection {
-    public String noPermission = "&8&l>> &cNie masz permisji do tej komendy! &7({permissions})";
+    public String noPermission =  "鼅 <white>Nie masz permisji do tej komendy! <gradient:#4fa943:#9ec52f><bold>({permissions})";
 
-    public String invalidCommand = "<red>Nie poprawne użycie komendy &8>> &7{command}";
-    public String invalidCommandHeader = "&cNie poprawne użycie komendy!";
-    public String helperLine = "&8 >> &7{schema}";
+    public String invalidCommand = "鼅 <white>Nie poprawne użycie komendy: &7{command}";
+    public String invalidCommandHeader = "鼅 <white>Nie poprawne użycie <gradient:#4fa943:#9ec52f><bold>komendy</bold></gradient>&f!";
+    public String helperLine = " <white>» <gray>{schema}";
 
-    public String playerIsOffline = "&8&l>> &cTen gracz jest offline!";
-    public String commandOnlyForPlayer = "&8&l>> &cTej komendy nie mozesz wywolac z poziomu konsoli!";
+    public String playerIsOffline = "鼅 <white>Ten gracz jest offline!";
+    public String commandOnlyForPlayer = "鼅 <white>Tej komendy nie mozesz <gradient:#4fa943:#9ec52f><bold>wywołać</bold></gradient> z poziomu konsoli!";
 }
