@@ -1,3 +1,4 @@
+net\exotia\plugins\exotiabackpack\command\UnauthorizedCommandHandler.class
 net\exotia\plugins\exotiabackpack\backpack\Backpack.class
 net\exotia\plugins\exotiabackpack\ExotiaBackpack.class
 net\exotia\plugins\exotiabackpack\configuration\providers\sections\DatabaseSection.class

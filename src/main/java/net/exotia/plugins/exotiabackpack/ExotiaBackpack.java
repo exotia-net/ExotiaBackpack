@@ -41,7 +41,7 @@ public final class ExotiaBackpack extends JavaPlugin {
                 // Contextual Bind
                 .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.liteCommands.commandOnlyForPlayer))
 
-                .commandInstance(new BackpackCommand(backpackService))
+                .commandInstance(new BackpackCommand(backpackService, this.pluginConfig))
                 .commandEditor(BackpackCommand.class, editor -> editor.name(this.pluginConfig.backpackCommand))
 
                 .invalidUsageHandler(new InvalidCommandUsageHandler(this.pluginConfig.liteCommands))
