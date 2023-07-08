@@ -7,6 +7,8 @@ import net.exotia.plugins.exotiabackpack.backpack.BackpackCommand;
 import net.exotia.plugins.exotiabackpack.backpack.BackpackController;
 import net.exotia.plugins.exotiabackpack.backpack.BackpackService;
 import net.exotia.plugins.exotiabackpack.backpack.BackpackUpdateTask;
+import net.exotia.plugins.exotiabackpack.command.InvalidCommandUsageHandler;
+import net.exotia.plugins.exotiabackpack.command.UnauthorizedCommandHandler;
 import net.exotia.plugins.exotiabackpack.configuration.ConfigurationManager;
 import net.exotia.plugins.exotiabackpack.configuration.providers.PluginConfig;
 import net.exotia.plugins.exotiabackpack.database.DatabaseService;
@@ -30,20 +32,20 @@ public final class ExotiaBackpack extends JavaPlugin {
         databaseService.connect();
         databaseService.load();
 
-        this.getServer().getPluginManager().registerEvents(new BackpackController(backpackService), this);
+        this.getServer().getPluginManager().registerEvents(new BackpackController(backpackService, this.pluginConfig), this);
         Bukkit.getScheduler().runTaskTimerAsynchronously(this, new BackpackUpdateTask(backpackService, databaseService), 60, 60);
 
         LiteBukkitFactory.builder(this.getServer(), this.getName())
                 // Arguments
-                .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), "&cNie ma takiego gracza!"))
+                .argument(Player.class, new BukkitPlayerArgument<>(this.getServer(), this.pluginConfig.liteCommands.playerIsOffline))
                 // Contextual Bind
-                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>("&cKomenda tylko dla gracza!"))
+                .contextualBind(Player.class, new BukkitOnlyPlayerContextual<>(this.pluginConfig.liteCommands.commandOnlyForPlayer))
 
                 .commandInstance(new BackpackCommand(backpackService))
                 .commandEditor(BackpackCommand.class, editor -> editor.name(this.pluginConfig.backpackCommand))
 
-//                .invalidUsageHandler()
-
+                .invalidUsageHandler(new InvalidCommandUsageHandler(this.pluginConfig.liteCommands))
+                .permissionHandler(new UnauthorizedCommandHandler(this.pluginConfig.liteCommands))
                 .register();
     }
 

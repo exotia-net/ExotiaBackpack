@@ -1,5 +1,6 @@
 package net.exotia.plugins.exotiabackpack.backpack;
 
+import net.exotia.plugins.exotiabackpack.configuration.providers.PluginConfig;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -11,8 +12,8 @@ public class BackpackService {
     public void registerBackpack(Backpack backpack) {
         this.backpacks.add(backpack);
     }
-    public void createUser(Player player) {
-        this.registerBackpack(new Backpack(player));
+    public void createUser(Player player, PluginConfig pluginConfig) {
+        this.registerBackpack(new Backpack(player, pluginConfig));
     }
 
     public Backpack findBackpack(Player player) {
