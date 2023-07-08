@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public class BackpackController implements Listener {
     private final BackpackService backpackService;
@@ -21,7 +22,7 @@ public class BackpackController implements Listener {
         Player player = event.getPlayer();
         Backpack backpack = this.backpackService.findBackpack(player);
         if (backpack == null) {
-            this.backpackService.registerBackpack(new Backpack(player, this.pluginConfig));
+            this.backpackService.registerBackpack(new Backpack(player));
         }
     }
 
@@ -32,5 +33,13 @@ public class BackpackController implements Listener {
         if (backpack == null) return;
         if (event.getInventory() != backpack.getInventory()) return;
         backpack.setNeedUpdate(true);
+    }
+
+    @EventHandler
+    public void onSwapHandItem(PlayerSwapHandItemsEvent event) {
+        Backpack backpack = this.backpackService.findBackpack(event.getPlayer());
+        if (backpack == null) return;
+        backpack.openInventory(this.pluginConfig);
+        event.setCancelled(true);
     }
 }

@@ -20,7 +20,7 @@ public class BackpackCommand {
     public void execute(Player player) {
         Backpack backpack = this.backpackService.findBackpack(player);
         if (backpack == null) {
-            this.backpackService.createUser(player, this.pluginConfig);
+            this.backpackService.createUser(player);
         }
         backpack.openInventory(this.pluginConfig);
     }

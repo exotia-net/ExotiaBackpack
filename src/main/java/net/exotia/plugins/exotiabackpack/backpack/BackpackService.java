@@ -12,8 +12,8 @@ public class BackpackService {
     public void registerBackpack(Backpack backpack) {
         this.backpacks.add(backpack);
     }
-    public void createUser(Player player, PluginConfig pluginConfig) {
-        this.registerBackpack(new Backpack(player, pluginConfig));
+    public void createUser(Player player) {
+        this.registerBackpack(new Backpack(player));
     }
 
     public Backpack findBackpack(Player player) {

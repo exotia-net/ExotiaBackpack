@@ -3,6 +3,8 @@ package net.exotia.plugins.exotiabackpack.backpack;
 import net.exotia.plugins.exotiabackpack.configuration.providers.PluginConfig;
 import net.exotia.plugins.exotiabackpack.utils.InventoryCompressor;
 import net.exotia.plugins.exotiabackpack.utils.ItemStackSerializer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -25,14 +27,14 @@ public class Backpack {
         try {
             this.uniqueId = UUID.fromString(resultSet.getString("owner"));
             ItemStack[] itemStacks = ItemStackSerializer.fromBase64(resultSet.getString("items"));
-            this.inventory = Bukkit.createInventory(null, itemStacks.length, pluginConfig.backpackGuiTitle);
+            this.inventory = Bukkit.createInventory(null, itemStacks.length, this.getBackpackTitle(itemStacks.length/9));
             this.inventory.setContents(itemStacks);
             this.needUpdate = false;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
-    public Backpack(Player player, PluginConfig pluginConfig) {
+    public Backpack(Player player) {
         this.uniqueId = player.getUniqueId();
         this.checkResize();
         this.needUpdate = true;
@@ -73,16 +75,19 @@ public class Backpack {
         Player player = Bukkit.getPlayer(this.uniqueId);
         if (player == null) return;
         int size = this.getBackpackMaxSize(player);
-        if (size < this.inventory.getSize()) return;
-        setSize(size).stream().filter(Objects::nonNull).toList().forEach(itemStack -> {
+        setSize(size, player).stream().filter(Objects::nonNull).toList().forEach(itemStack -> {
             player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
         });
     }
-    public List<ItemStack> setSize(int newSize) {
+    public List<ItemStack> setSize(int newSize, Player player) {
         List<ItemStack> removedItems;
         ItemStack[] itemStackArray;
+        if (this.inventory == null) {
+            this.inventory = Bukkit.createInventory(null, newSize*9, this.getBackpackTitle(newSize));
+        }
         if(this.inventory.getSize()/9 > newSize) {
             InventoryCompressor compressor = new InventoryCompressor(this.inventory.getContents(), newSize);
+            player.sendMessage(MiniMessage.miniMessage().deserialize("鼅 <white>Twój plecak zostal pomniejszony, itemy wypadly na ziemie!"));
             compressor.compress();
             itemStackArray = compressor.getTargetStacks();
             removedItems = compressor.getToMuch();
@@ -90,10 +95,16 @@ public class Backpack {
             itemStackArray = this.inventory.getContents();
             removedItems = new ArrayList<>(0);
         }
-        inventory = Bukkit.createInventory(null, newSize*9, "Plecak");
+        this.inventory = Bukkit.createInventory(null, newSize*9, this.getBackpackTitle(newSize));
         for(int i = 0; i < itemStackArray.length; i++) {
             this.inventory.setItem(i, itemStackArray[i]);
         }
         return removedItems;
+    }
+
+    private String getBackpackTitle(int size) {
+        return LegacyComponentSerializer.legacySection().serialize(
+                MiniMessage.miniMessage().deserialize("<white>✟" + List.of("꼀", "꼁", "꼂", "꼃", "꼄", "꼅").get(size-1))
+        );
     }
 }
