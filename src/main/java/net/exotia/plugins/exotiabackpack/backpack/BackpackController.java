@@ -37,8 +37,10 @@ public class BackpackController implements Listener {
 
     @EventHandler
     public void onSwapHandItem(PlayerSwapHandItemsEvent event) {
-        Backpack backpack = this.backpackService.findBackpack(event.getPlayer());
+        Player player = event.getPlayer();
+        Backpack backpack = this.backpackService.findBackpack(player);
         if (backpack == null) return;
+        if (!player.isSneaking()) return;
         backpack.openInventory(this.pluginConfig);
         event.setCancelled(true);
     }
