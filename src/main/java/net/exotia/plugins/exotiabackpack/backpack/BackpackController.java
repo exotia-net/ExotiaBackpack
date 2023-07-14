@@ -22,7 +22,7 @@ public class BackpackController implements Listener {
         Player player = event.getPlayer();
         Backpack backpack = this.backpackService.findBackpack(player);
         if (backpack == null) {
-            this.backpackService.registerBackpack(new Backpack(player));
+            this.backpackService.registerBackpack(new Backpack(player, this.pluginConfig));
         }
     }
 

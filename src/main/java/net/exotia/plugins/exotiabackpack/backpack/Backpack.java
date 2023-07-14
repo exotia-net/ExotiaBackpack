@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class Backpack {
     private UUID uniqueId;
     private Inventory inventory;
     private boolean needUpdate;
+    private PluginConfig pluginConfig;
 
     public Backpack(ResultSet resultSet, PluginConfig pluginConfig) {
+        this.pluginConfig = pluginConfig;
         try {
             this.uniqueId = UUID.fromString(resultSet.getString("owner"));
             ItemStack[] itemStacks = ItemStackSerializer.fromBase64(resultSet.getString("items"));
@@ -34,7 +35,8 @@ public class Backpack {
             throw new RuntimeException(e);
         }
     }
-    public Backpack(Player player) {
+    public Backpack(Player player, PluginConfig pluginConfig) {
+        this.pluginConfig = pluginConfig;
         this.uniqueId = player.getUniqueId();
         this.checkResize();
         this.needUpdate = true;
@@ -87,7 +89,7 @@ public class Backpack {
         }
         if(this.inventory.getSize()/9 > newSize) {
             InventoryCompressor compressor = new InventoryCompressor(this.inventory.getContents(), newSize);
-            player.sendMessage(MiniMessage.miniMessage().deserialize("鼅 <white>Twój plecak zostal pomniejszony, itemy wypadly na ziemie!"));
+            player.sendMessage(MiniMessage.miniMessage().deserialize(this.pluginConfig.backpackDowngrade));
             compressor.compress();
             itemStackArray = compressor.getTargetStacks();
             removedItems = compressor.getToMuch();
@@ -104,7 +106,7 @@ public class Backpack {
 
     private String getBackpackTitle(int size) {
         return LegacyComponentSerializer.legacySection().serialize(
-                MiniMessage.miniMessage().deserialize("<white>✟" + List.of("꼀", "꼁", "꼂", "꼃", "꼄", "꼅").get(size-1))
+                MiniMessage.miniMessage().deserialize(this.pluginConfig.titlePrefix + this.pluginConfig.guiTitles.get(size))
         );
     }
 }

@@ -26,7 +26,7 @@ public final class ExotiaBackpack extends JavaPlugin {
         configurationManager.loadConfigs();
         this.pluginConfig = configurationManager.getPluginConfig();
 
-        BackpackService backpackService = new BackpackService();
+        BackpackService backpackService = new BackpackService(this.pluginConfig);
 
         DatabaseService databaseService = new MySQLProvider(this.pluginConfig, backpackService);
         databaseService.connect();
